@@ -32,27 +32,33 @@ int main(void)
 
 		for (int i = 1; i < _N; i++)
 		{
-			dpm[i][0] = max(
+			dpm[i][0] = min(
 				dpm[i - 1][1] + (enemies[i].first + enemies[i].second <= _W || enemies[i - 1].second + enemies[i].second <= _W ? 1 : 2),
 				dpm[i - 1][2] + (enemies[i].first + enemies[i].second <= _W || enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2)
 			);
-			dpm[i][0] = max(dpm[i][0], dpm[i - 1][0] + (enemies[i].first + enemies[i].second <= _W ? 1 : 2));
-			dpm[i][1] = max(
+			dpm[i][0] = min(dpm[i][0], dpm[i - 1][0] + (enemies[i].first + enemies[i].second <= _W ? 1 : 2));
+			dpm[i][1] = min(
 				dpm[i - 1][1] + 2,
 				dpm[i - 1][2] + (enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2)
 			);
-			dpm[i][2] = max(dpm[i][1], dpm[i - 1][0] + 1);
-			dpm[i][2] = max(
+			dpm[i][2] = min(dpm[i][1], dpm[i - 1][0] + 1);
+			dpm[i][2] = min(
 				dpm[i - 1][1] + (enemies[i - 1].second + enemies[i].second <= _W ? 1 : 2),
 				dpm[i - 1][2] + 2
 			);
-			dpm[i][2] = max(dpm[i][2], dpm[i - 1][0] + 1);
+			dpm[i][2] = min(dpm[i][2], dpm[i - 1][0] + 1);
+		}
+
+		for (int i = 0; i < _N; i++)
+		{
+			for (int j = 0; j < 3; j++) printf("%d ", dpm[i][j]);
+			printf("\n");
 		}
 
 		int ans = dpm[_N - 1][0];
-		ans = max(ans, dpm[_N - 2][0] + 4 - int(enemies[0].first + enemies[_N - 1].first <= _W) - int(enemies[0].second + enemies[_N - 1].second <= _W));
-		ans = max(ans, dpm[_N - 2][1] + 3 - int(enemies[0].second + enemies[_N - 1].second <= _W));
-		ans = max(ans, dpm[_N - 2][2] + 3 - int(enemies[0].first + enemies[_N - 1].first <= _W));
+		ans = min(ans, dpm[_N - 2][0] + 4 - int(enemies[0].first + enemies[_N - 1].first <= _W) - int(enemies[0].second + enemies[_N - 1].second <= _W));
+		ans = min(ans, dpm[_N - 2][1] + 3 - int(enemies[0].second + enemies[_N - 1].second <= _W));
+		ans = min(ans, dpm[_N - 2][2] + 3 - int(enemies[0].first + enemies[_N - 1].first <= _W));
 
 		printf("%d\n", ans);
 	}
