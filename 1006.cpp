@@ -60,11 +60,11 @@ int dp(int type)
 		dpm[i][0] = min(dpm[i][0], dpm[i - 1][0] + (enemies[i].first + enemies[i].second <= _W ? 1 : 2));
 		dpm[i][1] = min(
 			dpm[i - 1][1] + 2,
-			dpm[i - 1][2] + (enemies[i - 1].second + enemies[i].second <= _W ? 1 : 2)
+			dpm[i - 1][2] + (enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2)
 		);
 		dpm[i][2] = min(dpm[i][1], dpm[i - 1][0] + 1);
 		dpm[i][2] = min(
-			dpm[i - 1][1] + (enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2),
+			dpm[i - 1][1] + (enemies[i - 1].second + enemies[i].second <= _W ? 1 : 2),
 			dpm[i - 1][2] + 2
 		);
 		dpm[i][2] = min(dpm[i][2], dpm[i - 1][0] + 1);
