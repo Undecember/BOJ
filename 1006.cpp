@@ -58,6 +58,7 @@ int dp(int type)
 			dpm[i - 1][2] + (enemies[i].first + enemies[i].second <= _W || enemies[i - 1].first + enemies[i].first <= _W ? 2 : 3)
 		);
 		dpm[i][0] = min(dpm[i][0], dpm[i - 1][0] + (enemies[i].first + enemies[i].second <= _W ? 1 : 2));
+		if (i > 1 && enemies[i - 1].first + enemies[i].first <= _W && enemies[i - 1].second + enemies[i].second <= _W) dpm[i][0] = min(dpm[i][0], dpm[i - 2][0] + 2);
 		dpm[i][1] = min(
 			dpm[i - 1][1] + 2,
 			dpm[i - 1][2] + (enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2)
