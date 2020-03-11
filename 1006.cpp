@@ -29,9 +29,12 @@ int main(void)
 		for (int i = 0; i < _N; i++) scanf("%d", &enemies[i].second);
 
 		int ans = dp(0);
-		if (enemies[0].first + enemies[_N - 1].first <= _W) ans = min(ans, dp(1));
-		if (enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(2));
-		if (enemies[0].first + enemies[_N - 1].first <= _W && enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(3));
+		if (_N != 1)
+		{
+			if (enemies[0].first + enemies[_N - 1].first <= _W) ans = min(ans, dp(1));
+			if (enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(2));
+			if (enemies[0].first + enemies[_N - 1].first <= _W && enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(3));
+		}
 
 		printf("%d\n", ans);
 	}
