@@ -24,7 +24,8 @@ int main(void)
 		vector<dpdatc> dpm(_N, dpdatc());
 		
 		enemies.assign(_N, { 0, 0 });
-		for (int i = 0; i < _N * 2; i++) scanf("%d", &dpm[i % _N][i / _N]);
+		for (int i = 0; i < _N; i++) scanf("%d", &enemies[i].first);
+		for (int i = 0; i < _N; i++) scanf("%d", &enemies[i].second);
 
 		dpm[0][0] = enemies[0].first + enemies[0].second <= _W ? 1 : 2;
 		dpm[0][1] = 1;
