@@ -45,6 +45,6 @@ int main(void)
 
 void mul(vector<int> & ret, vector<int> func)
 {
-    for (int i = 0; i < _N; i++) ret[i] += ret[func[i] - 1] % 10000 * 10000;
-    for (int i = 0; i < _N; i++) ret[i] /= 10000;
+    vector<int> tmp(ret);
+    for (int i = 0; i < _N; i++) ret[i] = tmp[func[i] - 1];
 }
