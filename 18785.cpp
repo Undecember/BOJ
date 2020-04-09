@@ -66,6 +66,7 @@ void filterbranch(vector<int> &v, vector<bool> &chk, int par)
         filterbranch(v, chk, _E[par][i]);
         int dif = max(v[_E[par][i]], 1);
         v[par] -= dif;
+        v[par] = (v[par] % 12 + 12) % 12;
         v[_E[par][i]] -= dif;
     }
 }
@@ -79,7 +80,7 @@ bool chk(int root)
     for (int i = 0; i < _N; i++)
     {
         if (i == root) continue;
-        if (nv[i] < 0) return false;
+        if (nv[i]) return false;
     }
-    return -nv[root] == (bool)-nv[root];
+    return nv[root] == 0 || nv[root] == 11;
 }
