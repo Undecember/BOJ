@@ -64,7 +64,9 @@ void filterbranch(vector<int> &v, vector<bool> &chk, int par)
         if (chk[_E[par][i]]) continue;
         chk[_E[par][i]] = true;
         filterbranch(v, chk, _E[par][i]);
-        v[par] -= v[_E[par][i]]--;
+        int dif = max(v[_E[par][i]], 1);
+        v[par] -= dif;
+        v[_E[par][i]] -= dif;
     }
 }
 
