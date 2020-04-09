@@ -78,8 +78,9 @@ bool chk(int root)
     filterbranch(nv, chk, root);
     for (int i = 0; i < _N; i++)
     {
+        nv[i] = (nv[i] % 12 + 12) % 12;
         if (i == root) continue;
-        if (nv[i] < 0) return false;
+        if (nv[i]) return false;
     }
-    return -nv[root] == (bool)-nv[root];
+    return nv[root] == 0 || nv[root] == 11;
 }
