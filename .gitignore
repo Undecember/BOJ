@@ -1,4 +1,4 @@
 .vscode/
-main.exe
+*.exe
 input.txt
 output.txt
