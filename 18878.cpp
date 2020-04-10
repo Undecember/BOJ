@@ -40,10 +40,12 @@ int main(void)
 void take(int cow, int cereal)
 {
     int origin = takers[cereal];
+
+    if (origin >= 0 && origin <= cow) return;
     takers[cereal] = cow;
-    if (origin != -1 && origin > cow)
+    if (origin == -1) ans++;
+    else
     {
         if (cereal == _F[origin].first) take(origin, _F[origin].second);
     }
-    else ans++;
 }
