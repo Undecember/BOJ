@@ -18,7 +18,7 @@ int main(void)
     {
         int v;
         scanf("%d", &v);
-        _V.push_back(12 - v);
+        _V.push_back((12 - v) % 12 + 12);
     }
 
     for (int i = 1; i < _N; i++)
@@ -63,11 +63,12 @@ void filterbranch(vector<int> &v, vector<bool> &chk, int par)
     {
         if (chk[_E[par][i]]) continue;
         chk[_E[par][i]] = true;
+
         filterbranch(v, chk, _E[par][i]);
-        int dif = max(v[_E[par][i]], 1);
-        v[par] -= dif;
-        v[par] = (v[par] % 12 + 12) % 12;
-        v[_E[par][i]] -= dif;
+
+        v[par] -= v[_E[par][i]];
+        v[par] = v[par] % 12 + 12;
+        v[_E[par][i]] = 0;
     }
 }
 
@@ -77,10 +78,5 @@ bool chk(int root)
     vector<bool> chk(_N, false);
     chk[root] = true;
     filterbranch(nv, chk, root);
-    for (int i = 0; i < _N; i++)
-    {
-        if (i == root) continue;
-        if (nv[i]) return false;
-    }
     return nv[root] == 0 || nv[root] == 11;
 }
