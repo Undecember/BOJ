@@ -37,9 +37,10 @@ void segadd(vector<lli> &seg, int index)
 {
     int l = 0, r = _N - 1;
     int segind = 0;
-    while (l < r)
+    while (true)
     {
         seg[segind]++;
+        if (l == r) break;
         int mid = (l + r) / 2;
         if (index <= mid)
         {
