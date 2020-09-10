@@ -4,17 +4,10 @@ using namespace std;
 
 int _T;
 int _N, _W;
+vector<int> _enms;
 
-class dpdatc
-{
-public:
-	int dat[3];
-	dpdatc() { memset(dat, 0, sizeof(dat)); }
-	int& operator[](int index) { return dat[index]; }
-};
-
-vector<pair<int, int>> enemies;
-int dp(int type);
+int getans();
+int dp();
 
 int main(void)
 {
@@ -23,63 +16,54 @@ int main(void)
 	while (_T--)
 	{
 		scanf("%d%d", &_N, &_W);
-		
-		enemies.assign(_N, { 0, 0 });
-		for (int i = 0; i < _N; i++) scanf("%d", &enemies[i].first);
-		for (int i = 0; i < _N; i++) scanf("%d", &enemies[i].second);
-
-		int ans = dp(0);
-		if (_N != 1)
-		{
-			if (enemies[0].first + enemies[_N - 1].first <= _W) ans = min(ans, dp(1));
-			if (enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(2));
-			if (enemies[0].first + enemies[_N - 1].first <= _W && enemies[0].second + enemies[_N - 1].second <= _W) ans = min(ans, dp(3));
-		}
-
-		printf("%d\n", ans);
+		_enms.assign(_N * 2, 0);
+		for (int i = 0; i < 2 * _N; i++) scanf("%d", &_enms[i]);
+		printf("%d\n", getans());
 	}
 
 	return 0;
 }
 
-int dp(int type)
+int getans()
 {
-	vector<dpdatc> dpm(_N, dpdatc());
+	if (_N == 1) return _enms[0] + _enms[1] <= _W ? 1 : 2;
+	int ans = dp();
+	bool flag = true;
+	for (int i = 0; i < 2; i++)
+	{
+		int i0 = i * _N, i1 = i * _N + _N - 1;
+		if (_enms[i0] + _enms[i1] <= _W)
+		{
+			int a = _enms[i0], b = _enms[i1];
+			_enms[i0] = _enms[i1] = _W;
+			ans = min(ans, dp() - 1);
+			_enms[i0] = a, _enms[i1] = b;
+		}
+		else flag = false;
+	}
+	if (flag)
+	{
+		_enms[0] = _enms[_N - 1] = _enms[_N] = _enms[_N * 2 - 1] = _W;
+		ans = min(ans, dp() - 2);
+	}
+	return ans;
+}
 
-	dpm[0][0] = enemies[0].first + enemies[0].second <= _W ? 1 : 2;
-	dpm[0][1] = dpm[0][2] = 1;
-
-	if (type != 0) dpm[0][0] = 2;
-	if (type == 1) dpm[0][2] = 2e7;
-	if (type == 2) dpm[0][1] = 2e7;
-	if (type == 3) dpm[0][1] = dpm[0][2] = 2e7;
-
+int dp()
+{
+	vector<vector<int>> dpm(_N, vector<int>(4, 0));
+	dpm[0].assign(4, 2);
+	if (_enms[0] + _enms[_N] <= _W) dpm[0][3] = 1;
 	for (int i = 1; i < _N; i++)
 	{
-		dpm[i][0] = min(
-			dpm[i - 1][1] + (enemies[i].first + enemies[i].second <= _W || enemies[i - 1].second + enemies[i].second <= _W ? 2 : 3),
-			dpm[i - 1][2] + (enemies[i].first + enemies[i].second <= _W || enemies[i - 1].first + enemies[i].first <= _W ? 2 : 3)
-		);
-		dpm[i][0] = min(dpm[i][0], dpm[i - 1][0] + (enemies[i].first + enemies[i].second <= _W ? 1 : 2));
-		if (enemies[i - 1].first + enemies[i].first <= _W && enemies[i - 1].second + enemies[i].second <= _W)
-		{
-			if (i >= 2) dpm[i][0] = min(dpm[i][0], dpm[i - 2][0] + 2);
-			else if (type == 0) dpm[i][0] = min(dpm[i][0], 2);
-		}
-		dpm[i][1] = min(
-			dpm[i - 1][1] + 2,
-			dpm[i - 1][2] + (enemies[i - 1].first + enemies[i].first <= _W ? 1 : 2)
-		);
-		dpm[i][2] = min(dpm[i][1], dpm[i - 1][0] + 1);
-		dpm[i][2] = min(
-			dpm[i - 1][1] + (enemies[i - 1].second + enemies[i].second <= _W ? 1 : 2),
-			dpm[i - 1][2] + 2
-		);
-		dpm[i][2] = min(dpm[i][2], dpm[i - 1][0] + 1);
+		bool f0 = _enms[i - 1] + _enms[i] <= _W;
+		bool f1 = _enms[_N + i - 1] + _enms[_N + i] <= _W;
+		bool f2 = _enms[i] + _enms[_N + i] <= _W;
+		dpm[i].assign(4, 2 + *min_element(dpm[i - 1].begin(), dpm[i - 1].end()));
+		if (f0) dpm[i][1] = min(dpm[i - 1][0], dpm[i - 1][2]) + 1;
+		if (f1) dpm[i][2] = min(dpm[i - 1][0], dpm[i - 1][1]) + 1;
+		if (f0 && f1) dpm[i][3] = dpm[i - 1][0];
+		if (f2) dpm[i][3] = min(dpm[i][3], dpm[i][0] - 1);
 	}
-
-	if (type == 1) return dpm[_N - 1][2];
-	if (type == 2) return dpm[_N - 1][1];
-	if (type == 3) return dpm[_N - 2][0];
-	return dpm[_N - 1][0];
+	return *min_element(dpm[_N - 1].begin(), dpm[_N - 1].end());
 }
